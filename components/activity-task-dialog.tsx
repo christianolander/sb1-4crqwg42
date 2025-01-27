@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -65,13 +64,6 @@ export function ActivityTaskDialog({ task, onOpenChange, onSave }: ActivityTaskD
 
   return (
     <Dialog open={!!task} onOpenChange={onOpenChange}>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[1001]"
-        onClick={() => onOpenChange(false)}
-      />
       <DialogContent className={cn(
         "sm:max-w-[600px]",
         task.completed && "select-none"

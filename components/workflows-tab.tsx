@@ -531,18 +531,12 @@ export function WorkflowsTab() {
                               <DropdownMenuItem
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  // Handle manual trigger
+                                  setWorkflowToTrigger(workflow);
+                                  setShowTriggerDialog(true);
                                 }}
                               >
                                 <Play className="mr-2 h-4 w-4" />
-                                <div
-                                  onClick={() => {
-                                    setWorkflowToTrigger(workflow);
-                                    setShowTriggerDialog(true);
-                                  }}
-                                >
-                                  Run manually
-                                </div>
+                                Run manually
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={(e) => {

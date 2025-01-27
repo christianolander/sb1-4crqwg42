@@ -106,3 +106,11 @@ export const activities: ActivityDetail[] = [
     ]
   }
 ];
+
+export async function getActivities(): Promise<ActivityDetail[]> {
+  return activities;
+}
+
+export async function getActivityById(id: number): Promise<ActivityDetail | null> {
+  return activities.find(a => a.id === id) || null;
+}

@@ -133,7 +133,7 @@ export function WorkflowTriggerDialog({
                 <SelectTrigger>
                   <SelectValue placeholder="Select employee..." />
                 </SelectTrigger>
-                <SelectContent className="z-[1002]">
+                <SelectContent>
                   {employees.map((employee) => (
                     <SelectItem
                       key={employee.id}
@@ -190,7 +190,7 @@ export function WorkflowTriggerDialog({
                   {formattedDate || 'Select date'}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0 z-[1002]" align="start">
+              <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   mode="single"
                   selected={date}

@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Mail, Check, User, Calendar, Tag } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -16,13 +15,6 @@ export function WorkflowActionModal({ action, onOpenChange }: WorkflowActionModa
 
   return (
     <Dialog open={!!action} onOpenChange={onOpenChange} modal={true}>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[1001]"
-        onClick={() => onOpenChange(false)}
-      />
       <DialogContent>
         <DialogHeader>
           <div className="flex items-center gap-3">
