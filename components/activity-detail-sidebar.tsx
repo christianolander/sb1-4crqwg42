@@ -18,9 +18,10 @@
     import {
       X,
       Clock,
+			Calendar,
       FileText,
       Users,
-      Mail,
+      Mail, // Import Mail icon
       CheckSquare,
       AlertCircle,
       ChevronDown,
@@ -28,7 +29,9 @@
       Send,
       CheckCircle2,
       Edit,
-      UserPlus
+      UserPlus,
+      MoreHorizontal,
+      Plus // Import Plus icon
     } from 'lucide-react';
     import {
       DropdownMenu,
@@ -37,6 +40,7 @@
       DropdownMenuTrigger,
     } from "@/components/ui/dropdown-menu"
     import { ScrollArea } from "@/components/ui/scroll-area"
+    import { useToast } from "@/hooks/use-toast"
 
     interface ActivityDetailSidebarProps {
       activity: ActivityDetail;
@@ -82,6 +86,7 @@
       const progress = (completedTasks / totalTasks) * 100;
       const [stakeholders, setStakeholders] = useState(activity.stakeholders);
       const [isStakeholderDialogOpen, setStakeholderDialogOpen] = useState(false);
+      const { toast } = useToast()
 
 
       const handleTaskToggle = (taskId: number) => {
@@ -91,6 +96,22 @@
           )
         );
       };
+
+      const handleTaskDelete = (taskId: number) => {
+        setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+        toast({
+          variant: "destructive",
+          title: "Task deleted.",
+          description: "The task has been permanently deleted."
+        })
+      };
+
+
+      const handleAddTask = (newTask: Omit<typeof tasks[0], 'id' | 'completed'>) => {
+        const nextTaskId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
+        setTasks(prevTasks => [...prevTasks, { id: nextTaskId, completed: false, ...newTask }]);
+      };
+
 
       const handleAddComment = () => {
         if (!newComment.trim()) return;
@@ -300,29 +321,90 @@
                                         <span className="font-medium group-hover:underline">{task.title}</span>
                                         <Edit className="h-3.5 w-3.5 text-foreground/90 opacity-0 group-hover:opacity-100 transition-opacity" />
                                       </div>
-                                      <div className="text-sm text-muted-foreground">{task.description}</div>
+                                      {task.type !== 'email' && (
+                                        <div className="text-sm text-muted-foreground">{task.description}</div>
+                                      )}
+                                      {task.type === 'email' && task.content && (
+                                        <div className="text-sm text-muted-foreground line-clamp-1">{task.content}</div>
+                                      )}
                                     </div>
-                                    {task.type === 'email' ? (
-                                      <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
-                                    ) : (
-                                      <CheckSquare className="h-4 w-4 text-muted-foreground shrink-0" />
-                                    )}
+
+                                    <DropdownMenu>
+                                      <DropdownMenuTrigger asChild>
+                                        <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                          <MoreHorizontal className="h-4 w-4" />
+                                        </Button>
+                                      </DropdownMenuTrigger>
+                                      <DropdownMenuContent align="end">
+                                        {!(task.type === 'email' || task.type === 'system') && (
+                                          <DropdownMenuItem onSelect={() => handleTaskToggle(task.id)}>
+                                            {task.completed ? 'Mark as undone' : 'Mark as done'}
+                                          </DropdownMenuItem>
+                                        )}
+                                        <DropdownMenuItem onSelect={() => setSelectedTask(task)}>
+                                          Edit
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onSelect={() => handleTaskDelete(task.id)}>
+                                          Delete
+                                        </DropdownMenuItem>
+                                      </DropdownMenuContent>
+                                    </DropdownMenu>
                                   </div>
                                   <div className="flex items-center gap-4 text-sm">
-                                    <div className="flex items-center gap-1 text-muted-foreground">
-                                      <Clock className="h-4 w-4" />
-                                      <span>{format(new Date(task.dueDate), 'MMM dd')}</span>
-                                    </div>
-                                    <div className="flex items-center gap-1 text-muted-foreground">
-                                      <Users className="h-4 w-4" />
-                                      <span>{task.assignee}</span>
-                                    </div>
+                                    {task.type !== 'email' && (
+                                      <div className="flex items-center gap-1 text-muted-foreground">
+                                        <Calendar className="h-4 w-4" />
+                                        <span>{format(new Date(task.dueDate), 'MMM dd')}</span>
+                                      </div>
+                                    )}
+                                    {task.type === 'email' && task.sendDate && (
+                                      <div className="flex items-center gap-1 text-muted-foreground">
+                                        <Calendar className="h-4 w-4" />
+                                        <span>{format(new Date(task.sendDate), 'MMM dd, HH:mm')}</span>
+                                      </div>
+                                    )}
+                                    {task.type !== 'email' && (
+                                      <div className="flex items-center gap-1 text-muted-foreground">
+                                        <Users className="h-4 w-4" />
+                                        <span>{task.assignee}</span>
+                                      </div>
+                                    )}
+                                    {task.type === 'email' && task.recipient && (
+                                      <div className="flex items-center gap-1 text-muted-foreground">
+                                        <Mail className="h-4 w-4" /> {/* Use Mail icon for recipient */}
+                                        <span>{task.recipient}</span>
+                                      </div>
+                                    )}
                                   </div>
                                 </div>
                               </div>
                             </div>
                           ))}
                         </div>
+                        <Dialog open={
+                          false
+                          /* TODO: Remove comment when create task dialog is implemented */
+                          /* isTaskDialogOpen */
+                        }
+                        /* onOpenChange={setTaskDialogOpen} */
+                        >
+                          <DialogContent className="sm:max-w-[425px]">
+                            <DialogHeader>
+                              <DialogTitle>Create New Action</DialogTitle>
+                              <DialogDescription>
+                                Add a new action to this activity.
+                              </DialogDescription>
+                            </DialogHeader>
+                            {/* TODO: Create Task Form */}
+                            {/* <AddTaskForm onAddTask={handleAddTask} onOpenChange={setTaskDialogOpen} /> */}
+                          </DialogContent>
+                        </Dialog>
+                        <Button variant="ghost" size="sm" className="mt-4 w-full justify-start gap-2"
+                        /* onClick={() => setTaskDialogOpen(true)} */
+                        >
+                          <Plus className="h-4 w-4" />
+                          Add Action
+                        </Button>
                       </CollapsibleContent>
                     </Collapsible>
 
