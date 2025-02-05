@@ -1,4 +1,4 @@
-// File: /home/project/app/activity-center/page.tsx
+// File: /Users/colander/dev/sb1-4crqwg42/app/activity-center/page.tsx
 import * as entry from '../../../../app/activity-center/page.js'
 import type { ResolvingMetadata } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
