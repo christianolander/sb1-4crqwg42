@@ -109,7 +109,7 @@ export const activities: ActivityDetail[] = [
         recipient: "hr@example.com",
         content:
           "Employee Karl Karlsson has joined the team. We need to get him up to speed as quickly as possible.",
-        sendDate: "2024-03-29T12:00:00",
+        sendDate: "2024-04-02T12:00:00",
       },
     ],
   },
